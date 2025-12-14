@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - LocalArtHub</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Spartan", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #088178 0%, #066b63 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+        }
+
+        .auth-left {
+            flex: 1;
+            padding: 60px 50px;
+            background: white;
+        }
+
+        .auth-right {
+            flex: 1;
+            background: linear-gradient(135deg, #088178 0%, #066b63 100%);
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .logo {
+            width: 120px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #222;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #088178;
+            box-shadow: 0 0 0 3px rgba(8, 129, 120, 0.1);
+        }
+
+        .form-group .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 45px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #088178;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #088178;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #066b63;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(8, 129, 120, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .social-btn:hover {
+            border-color: #088178;
+            transform: translateY(-2px);
+        }
+
+        .switch-auth {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .switch-auth a {
+            color: #088178;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: -400px;
+            background: #27ae60;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            right: 20px;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+        }
+
+        .auth-right h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .auth-right p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .features {
+            text-align: left;
+            width: 100%;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+
+            .auth-left,
+            .auth-right {
+                padding: 40px 30px;
+            }
+
+            .auth-right {
+                display: none;
+            }
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error input {
+            border-color: #e74c3c;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-left">
+            <div class="logo-container">
+                <h2 id="formTitle">Welcome Back</h2>
+                <p class="subtitle">Sign in to continue to LocalArtHub</p>
+            </div>
+
+            <form id="authForm">
+                <div class="form-group" id="nameGroup" style="display: none;">
+                    <label>Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name">
+                    <span class="error-message">Please enter your name</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <span class="error-message">Please enter a valid email</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword()"></i>
+                    <span class="error-message">Password must be at least 6 characters</span>
+                </div>
+
+                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password">
+                    <span class="error-message">Passwords do not match</span>
+                </div>
+
+                <div class="forgot-password" id="forgotLink">
+                    <a href="#" onclick="showForgotPassword(); return false;">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">Sign In</button>
+            </form>
+
+            <div class="divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <button class="social-btn" onclick="socialLogin('Google')">
+                    <i class="fab fa-google"></i>
+                    Google
+                </button>
+                <button class="social-btn" onclick="socialLogin('Facebook')">
+                    <i class="fab fa-facebook-f"></i>
+                    Facebook
+                </button>
+            </div>
+
+            <div class="switch-auth">
+                <span id="switchText">Don't have an account?</span>
+                <a href="#" id="switchLink" onclick="switchAuthMode(); return false;">Sign Up</a>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <h3>Discover Local Art</h3>
+            <p>Join our community of art lovers and support local artisans. Get exclusive access to unique handcrafted pieces.</p>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div>
+                        <strong>Free Shipping</strong>
+                        <p style="font-size: 14px; margin: 0;">On all orders</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <strong>Secure Payment</strong>
+                        <p style="font-size: 14px; margin: 0;">100% secure transactions</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div>
+                        <strong>Support Local Artists</strong>
+                        <p style="font-size: 14px; margin: 0;">Authentic handmade art</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isSignUp = false;
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.querySelector('.password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function switchAuthMode() {
+            isSignUp = !isSignUp;
+            const formTitle = document.getElementById('formTitle');
+            const submitBtn = document.getElementById('submitBtn');
+            const switchText = document.getElementById('switchText');
+            const switchLink = document.getElementById('switchLink');
+            const nameGroup = document.getElementById('nameGroup');
+            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+            const forgotLink = document.getElementById('forgotLink');
+
+            if (isSignUp) {
+                formTitle.textContent = 'Create Account';
+                submitBtn.textContent = 'Sign Up';
+                switchText.textContent = 'Already have an account?';
+                switchLink.textContent = 'Sign In';
+                nameGroup.style.display = 'block';
+                confirmPasswordGroup.style.display = 'block';
+                forgotLink.style.display = 'none';
+            } else {
+                formTitle.textContent = 'Welcome Back';
+                submitBtn.textContent = 'Sign In';
+                switchText.textContent = "Don't have an account?";
+                switchLink.textContent = 'Sign Up';
+                nameGroup.style.display = 'none';
+                confirmPasswordGroup.style.display = 'none';
+                forgotLink.style.display = 'block';
+            }
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 10);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        async function socialLogin(provider) {
+            showNotification(`${provider} login coming soon!`, 'info');
+        }
+
+        function showForgotPassword() {
+            const email = prompt('Enter your email address to reset password:');
+            if (email && validateEmail(email)) {
+                showNotification('Password reset link sent to your email!');
+            } else if (email) {
+                showNotification('Please enter a valid email', 'error');
+            }
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Clear previous errors
+            document.querySelectorAll('.form-group').forEach(g => g.classList.remove('error'));
+
+            // Validation
+            let hasError = false;
+
+            if (!validateEmail(email)) {
+                document.querySelector('#email').closest('.form-group').classList.add('error');
+                hasError = true;
+            }
+
+            if (password.length < 6) {
+                document.querySelector('#password').closest('.form-group').classList.add('error');
+                hasError = true;
+            }
+
+            if (isSignUp) {
+                const name = document.getElementById('name').value.trim();
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (!name) {
+                    document.querySelector('#name').closest('.form-group').classList.add('error');
+                    hasError = true;
+                }
+
+                if (password !== confirmPassword) {
+                    document.querySelector('#confirmPassword').closest('.form-group').classList.add('error');
+                    hasError = true;
+                }
+            }
+
+            if (hasError) return;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+
+            try {
+                if (isSignUp) {
+                    // Sign Up
+                    const name = document.getElementById('name').value.trim();
+                    
+                    let users = [];
+                    try {
+                        const result = await window.storage.get('users', false);
+                        if (result) {
+                            users = JSON.parse(result.value);
+                        }
+                    } catch (error) {
+                        console.log('No existing users');
+                    }
+
+                    // Check if user exists
+                    if (users.find(u => u.email === email)) {
+                        showNotification('Email already registered', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Sign Up';
+                        return;
+                    }
+
+                    // Add new user
+                    users.push({
+                        name,
+                        email,
+                        password, // In production, hash this!
+                        createdAt: new Date().toISOString()
+                    });
+
+                    await window.storage.set('users', JSON.stringify(users), false);
+                    await window.storage.set('currentUser', JSON.stringify({ name, email }), false);
+
+                    showNotification('Account created successfully!');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+
+                } else {
+                    // Sign In
+                    let users = [];
+                    try {
+                        const result = await window.storage.get('users', false);
+                        if (result) {
+                            users = JSON.parse(result.value);
+                        }
+                    } catch (error) {
+                        showNotification('No users found. Please sign up first.', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Sign In';
+                        return;
+                    }
+
+                    const user = users.find(u => u.email === email && u.password === password);
+
+                    if (user) {
+                        await window.storage.set('currentUser', JSON.stringify({ name: user.name, email: user.email }), false);
+                        showNotification('Signed in successfully!');
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    } else {
+                        showNotification('Invalid email or password', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Sign In';
+                    }
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+                showNotification('An error occurred. Please try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = isSignUp ? 'Sign Up' : 'Sign In';
+            }
+        });
+    </script>
+</body>
+</html>
